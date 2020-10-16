@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>DSCI 554 Lab 8 ex7</title>
+
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="node_modules/highlightjs/styles/github.css">
+	<script src="node_modules/highlightjs/highlight.pack.min.js"></script>
+  	<script>hljs.initHighlightingOnLoad();</script>
+
+	<script src="node_modules/d3/dist/d3.min.js"></script>
+	
+</head>
+
+<body>
+	<h1>🏋🏽‍♂️ EX7: D3 LA County Communities map</h1>
+
+	<h2>1 - Getting GeoJSON</h2>
+	<hr>
+
+	<p>Download GeoJSON using the <code>Export</code> menu from the <a target="_blank" href="https://data.lacounty.gov/GIS-Data/Community-Boundaries-CSA-/g4rb-en2z">Los Angeles GeoHub Community Boundaries (CSA)</a> and save it in <code>data/Community Boundaries (CSA).geojson</code>.</code></p>
+
+	<p>Complete the Answer where indicated by 🚧.</p>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+		
+		<svg id="svg1" width="300" height="300" style="background-color: #eee"></svg>
+
+		<script type="text/javascript">
+			d3.json('data/Community Boundaries (CSA).geojson').then(json => {
+				var svg = d3.select('#svg1'),
+				width = +svg.attr('width'),
+				height = +svg.attr('height');
+	
+				var projection = d3.geoMercator()  //🚧  explain
+					.fitSize([width, height], json);
+
+				path = d3.geoPath()  //🚧  explain
+					.projection(projection);  //🚧  explain
+	
+				svg.selectAll('path')
+					.data(json.features)  //🚧  explain
+					.enter()
+					.append('path')
+					.attr('fill', 'white')
+					.attr('stroke', 'black')
+					.attr('d', path);
+			});
+		</script>
+
+		<pre><code class="js">d3.json('data/Community Boundaries (CSA).geojson').then(json => {
+var svg = d3.select('#svg1'),
+  width = +svg.attr('width'),
+  height = +svg.attr('height');
+
+var projection = d3.geoMercator()  //🚧  explain
+  .fitSize([width, height], json);
+
+path = d3.geoPath()  //🚧  explain
+  .projection(projection);  //🚧  explain
+
+svg.selectAll('path')
+  .data(json.features)  //🚧  explain
+  .enter()
+  .append('path')
+  .attr('fill', 'white')
+  .attr('stroke', 'black')
+  .attr('d', path);
+});</code></pre>
+	</div>
+
+	<h2>2 - Centering the map</h2>
+	<hr>
+
+	<p>Complete the Answer where indicated by 🚧.</p>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+
+		<style>
+			.selected {
+				fill: red;
+			}
+			.cities {
+			  fill: whitesmoke;
+			  stroke: #666;
+			  stroke-width: 0.5px;
+			}
+		  </style>
+
+		<div><small>Mouse over the map to display features properties</small></div>
+		<div class="container">
+			<div class="col">
+				<svg id="svg2" width="300" height="300"></svg>				
+			</div>
+			<div class="col">
+				<span class="alert" id="info2"></span>				
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			d3.json('data/Community Boundaries (CSA).geojson').then(json => {
+
+				var svg = d3.select('#svg2'),
+					width = +svg.attr('width'),
+					height = +svg.attr('height');
+	
+				var projection = d3.geoMercator()
+					.fitSize([width, height], json);
+
+				//🚧  try and explain
+				// projection = d3.geoMercator()
+				// 	.center([ -118.300, 34.295 ])
+				// 	.translate([ width * 0.5, height * 0.5 ])
+				// 	.scale([ 10000 ]);
+
+				path = d3.geoPath()
+					.projection(projection);
+	
+				svg.append('g')
+					.attr('class', 'cities')
+					.selectAll('path')
+					.data(json.features)
+					.enter()
+					.append('path')
+					.attr('d', path)
+					.on('mouseenter', function (d) {
+						svg.select('.selected')
+							.classed('selected', false);
+						d3.select(this)
+							.classed('selected', true);
+						d3.select('#info2')
+							.text('properties = ' + JSON.stringify(this.__data__.properties, null, 2));
+					});
+			});
+		</script>
+		<pre><code class="js">d3.json('data/Community Boundaries (CSA).geojson').then(json => {
+
+var svg = d3.select('#svg2'),
+  width = +svg.attr('width'),
+  height = +svg.attr('height');
+
+var projection = d3.geoMercator()
+  .fitSize([width, height], json);
+
+//🚧  try and explain
+// projection = d3.geoMercator()
+// 	.center([ -118.300, 34.295 ])
+// 	.translate([ width * 0.5, height * 0.5 ])
+// 	.scale([ 10000 ]);
+
+path = d3.geoPath()
+  .projection(projection);
+
+svg.append('g')
+  .attr('class', 'cities')
+  .selectAll('path')
+  .data(json.features)
+  .enter()
+  .append('path')
+  .attr('d', path)
+  .on('mouseenter', function (d) {
+    svg.select('.selected')
+      .classed('selected', false);
+    d3.select(this)
+      .classed('selected', true);
+    d3.select('#info2')
+      .text('properties = ' + JSON.stringify(this.__data__.properties, null, 2));  //🚧 explain
+  });
+});
+</code></pre>
+	</div>
+
+	<h2>3 - Filtering features once loaded</h2>
+	<hr>
+
+	<p>Complete the Answer where indicated by 🚧.</p>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+
+		<div><small>Mouse over the map to display features properties</small></div>
+		<div class="container">
+			<div class="col">
+				<svg id="svg3" width="300" height="300"></svg>				
+			</div>
+			<div class="col">
+				<span class="alert" id="info3"></span>				
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			d3.json('data/Community Boundaries (CSA).geojson').then(json => {
+				json.features = json.features.filter(d => { 
+					return (d.properties.objectid !== "5" &&
+							//d.properties.objectid !== "" && //🚧  finish to filter out the islands here
+							d.properties.objectid !== "309");
+				});
+
+				var svg = d3.select('#svg3'),
+				width = +svg.attr('width'),
+				height = +svg.attr('height');
+	
+				var projection = d3.geoMercator()
+					.fitSize([width, height], json);
+
+				path = d3.geoPath()
+					.projection(projection);
+	
+				svg.append('g')
+					.attr('class', 'cities')
+					.selectAll('path')
+					.data(json.features)
+					.enter()
+					.append('path')
+					.attr('d', path)
+					.on('mouseenter', function (d) {
+						svg.select('.selected')
+							.classed('selected', false);
+						d3.select(this)
+							.classed('selected', true);
+						d3.select('#info3')
+							.text('properties = ' + JSON.stringify(this.__data__.properties, null, 2));
+					});
+			});
+		</script>
+		<pre><code class="js">d3.json('data/Community Boundaries (CSA).geojson').then(json => {
+	
+  json.features = json.features.filter(d => { 
+    return (d.properties.objectid !== "5" &&
+            //d.properties.objectid !== "" &&  //🚧  finish to filter out the islands here
+            d.properties.objectid !== "309");
+  });
+
+
+  var svg = d3.select('#svg3'),
+  width = +svg.attr('width'),
+  height = +svg.attr('height');
+
+  var projection = d3.geoMercator()
+    .fitSize([width, height], json);
+
+  path = d3.geoPath()
+    .projection(projection);
+
+  svg.append('g')
+    .attr('class', 'cities')
+    .selectAll('path')
+    .data(json.features)
+    .enter()
+    .append('path')
+    .attr('d', path)
+    .on('mouseenter', function (d) {
+      svg.select('.selected')
+        .classed('selected', false);
+      d3.select(this)
+        .classed('selected', true);
+      d3.select('#info3')
+        .text('properties = ' + JSON.stringify(this.__data__.properties, null, 2));
+    });
+});
+</code></pre>
+
+<pre><code class="js">
+</code></pre>
+	</div>
+
+	<h2>4 - Filtering features before loading</h2>
+	<hr>
+
+	<p>You can edit the GeoJSON with VS Code but because the file is large that is a bit difficult. Another alternative is using some command line tool. Here we are going to edit <code>Community Boundaries (CSA).geojson</code> in <a target="_blank" href="https://geojson.io">https://geojson.io</a> to remove the geometry for the islands and save the result as <code>data/Community Boundaries (CSA).geojson.io</code>.</p>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+
+			<div><small>Mouse over the map to display features properties</small></div>
+			<div class="container">
+				<div class="col">
+					<svg id="svg4" width="300" height="300"></svg>				
+				</div>
+				<div class="col">
+					<span class="alert" id="info"></span>				
+				</div>
+			</div>
+			
+			<script type="text/javascript">
+				d3.json('data/Community Boundaries (CSA).geojson.io').then(json => {
+					var svg = d3.select('#svg4'),
+					width = +svg.attr('width'),
+					height = +svg.attr('height');
+		
+					var projection = d3.geoMercator()
+						.fitSize([width, height], json);
+
+					path = d3.geoPath()
+						.projection(projection);
+		
+					svg.append('g')
+						.attr('class', 'cities')
+						.selectAll('path')
+						.data(json.features)
+						.enter()
+						.append('path')
+						.attr('d', path)
+						.on('mouseenter', function (d) {
+							svg.select('.selected')
+								.classed('selected', false);
+							d3.select(this)
+								.classed('selected', true);
+							d3.select('#info')
+								.text('properties = ' + JSON.stringify(this.__data__.properties, null, 2));
+						});
+				});
+			</script>
+		</div>
+	</div>	
+</body>
+</html>

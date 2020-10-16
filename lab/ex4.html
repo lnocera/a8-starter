@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>DSCI 554 Lab 8 ex4</title>
+
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="node_modules/highlightjs/styles/github.css">
+	<script src="node_modules/highlightjs/highlight.pack.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+	<h1>🏋🏽‍♂️ EX4: GeoJSON</h1>
+
+	<h2>0 - download a footprint</h2>
+	<hr>
+
+    <p>Follow the instructions below. Complete the Answer where marked with 🚧.</p>
+
+	<ol>
+		<li>Go to the <a target="_blank"
+			href="https://geohub.lacity.org/datasets/building-footprints/data?geometry=-118.299%2C34.018%2C-118.269%2C34.024&orderBy=BLD_ID&orderByAsc=false&where=BLD_ID">Los
+			Angeles GeoHub Building Footprints page</a></li>
+		<li>Zoom in the map and select <mark>one building footprint of your choice</mark> on the USC campus as shown in the picture.
+			<div>
+				<img width="250" src="picts/footprints1.png" />
+			</div>
+		</li>
+		<li>Click the <kbd>BLD_ID</kbd> filter icon in the table header and set the <code>BLD_ID</code>.
+			<div>
+				<img width="250" src="picts/filter.png" />
+			</div>
+		</li>
+		<li>Click the <kbd>APIs</kbd> dropdown, copy the URL under <mark>Filtered Dataset > GeoService</mark> and open the
+			URL in a new window.
+			<div>
+				<img width="250" src="picts/download-filtered.png" />
+			</div>
+		</li>
+		<li>Scroll to the bottom of the form set <kbd>Format</kbd> to <mark>GEOJSON</mark> and click <mark>Query
+				(GET)</mark>, copy the resulting GeoJSON in the Answer.
+		</li>
+	</ol>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+
+		<pre><code class="json"><!-- 🚧 footprint geojson here -->
+</code></pre>
+	</div>
+
+	<h2>1 - download multiple footprints</h2>
+	<hr>
+
+    <p>Follow the instructions below. Complete the Answer where marked with 🚧.</p>
+
+	<ol>
+		<li>Go to the <a target="_blank"
+			href="https://geohub.lacity.org/datasets/building-footprints/data?geometry=-118.299%2C34.018%2C-118.269%2C34.024&orderBy=BLD_ID&orderByAsc=false&where=BLD_ID">Los
+			Angeles GeoHub Building Footprints page</a></li>
+		<li>Click the <kbd>APIs</kbd> dropdown, copy the URL under <mark>Filtered Dataset > GeoService</mark> and open the
+			URL in a new window. In the form:
+			<ul>
+				<li><mark>Object IDs:</mark> set to a comma separated list of <kbd>BLD_ID</kbd> for 3 buildings of your choice (select footprints on the map to see the properties).</li>
+				<li><mark>Format:</mark> choose <mark>GEOJSON</mark>.</li>
+				<li>Click <mark>Query (GET)</mark> and save the page contents to <code>data/footprints.geojson</code>.</li>
+				<li>Update the URL in the answer and execute curl command.</li>
+			</ul>
+		</li>
+	</ol>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+
+		<pre><code class="sh">curl -o data/footprints.geojson \
+<!-- 🚧 INSERT URL RETURNED BY "Query (GET)" HERE -->
+
+<!-- 🚧 INSERT OUTPUT OF CURL COMMAND HERE -->
+</code></pre>
+	</div>
+
+	<h2>3 - Display and edit GeoJSON Online</h2>
+	<hr>
+
+	<p>Use <a target="_blank" href="https://geojson.io/">https://geojson.io/</a> online geoJSON editor to manually
+		extend <code>data/footprints.geojson</code> with a <mark>footprint feature you create for a building of your choice</mark>. You can use <a target="_blank" href="http://geojson.tools/">http://geojson.tools/</a> to view
+		<code>data/footprints.geojson</code>.</p>
+
+	<h2>4 - Display footprints in Mapbox</h2>
+	<hr>
+
+	<ol>
+		<li>Implement the code of ex2.1 in the Answer</li>
+		<li>Use the sample code to display <code>data/footprints.geojson</code></li>
+		<li>Use Google maps to get the coordinates to center the view on the footprints</li>
+	</ol>
+
+	<div class="sample">
+		<cap>Sample code</cap>
+		<pre><code class="js">map.on('load', function () {
+  map.addSource('footprints_source', { 
+    type: 'geojson', 
+    data: 'data/footprints.geojson'
+  });
+  
+  map.addLayer({
+    'id': 'footprints',
+    'type': 'fill',
+    'source': 'footprints_source',
+    'layout': {},
+    'paint': {
+      'fill-color': '#ff9999',
+      'fill-opacity': 0.8
+    }
+  });
+});</code></pre>
+	</div>
+	
+	<div class="answer">
+		<div class="title">Answer</div>
+		<!-- add your code here -->
+		</div>
+	</div>
+</body>
+
+</html>

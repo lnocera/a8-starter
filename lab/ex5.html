@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>DSCI 554 Lab 8 ex5</title>
+
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="node_modules/highlightjs/styles/github.css">
+	<script src="node_modules/highlightjs/highlight.pack.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+	<script src="node_modules/d3/dist/d3.min.js"></script>
+
+</head>
+
+<body>
+	<h1>🏋🏽‍♂️ EX5: D3 geoJSON map</h1>
+
+	<h2>1 - loading GeoJSON</h2>
+	<hr>
+
+	<p>Use Dev Tools to complete the Answer where indicated by 🚧.</p>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+
+		<script>
+			var data;
+			d3.json('data/us.json').then(json => {  //🚧  explain
+				data = json;
+			});
+		</script>
+
+		<pre><code class="js">var data;
+d3.json('data/us.json').then(json => {  //🚧  explain
+  data = json;
+  data = // 🚧  printed value
+  data.features[0] = // 🚧  printed value
+});</code></pre>
+	</div>
+
+	<h2>2 - projecting GeoJSON</h2>
+	<hr>
+
+	<p>See <a target="_blank" href="https://github.com/d3/d3-geo/blob/v2.0.0/README.md#_projection">d3-geo projection</a> and <a target="_blank" href="https://github.com/d3/d3-geo#geoAlbersUsa">d3.geoAlbersUsa()</a>. Complete the Answer where indicated by 🚧.</p>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+
+		<script>
+			var projection;
+			var data;
+			var width = 600, height = 400;  //svg dimensions
+
+			d3.json('data/us.json').then(json => {
+				data = json;
+				
+				//Albers USA is a composite and does not support rotation or centering
+				projection = d3.geoAlbersUsa()
+					//.center([ -118.40089741690664, 34.095139792912214 ])  //🚧  try and explain
+					.translate([width * 0.5, height * 0.5])
+					.scale([500]);
+
+				// projection = d3.geoAlbersUsa()
+				// 	.fitSize([width, height], json.features[4]);    //🚧  try and explain
+
+				marker = [-118.289152, 34.019350];
+
+				//🚧 use projection to project marker
+				var point = projection(marker);  //🚧  point=
+
+				//🚧 use projection to project json.features[0].geometry
+				var coords = json.features[0].geometry.coordinates[0];  //🚧 explain
+				coords.forEach(d => {
+					var point = projection(d);
+					//console.log(d, point);
+					//🚧  copy printed values here
+				});
+			});
+		</script>
+
+		<pre><code class="js">var projection;
+var width = 600, height = 400;  //svg dimensions
+var marker;
+
+d3.json('data/us.json').then(json => {
+  data = json;
+
+  //Albers USA is a composite and does not support rotation or centering
+  projection = d3.geoAlbersUsa()
+    //.center([ -118.40089741690664, 34.095139792912214 ])  //🚧  try and explain
+    .translate([width * 0.5, height * 0.5])
+    .scale([500]);
+  
+  // projection = d3.geoAlbersUsa()
+  //   .fitSize([width, height], json);    //🚧  try and explain
+
+  // projection = d3.geoAlbersUsa()
+  //   .fitSize([width, height], json.features[4]);    //🚧  try and explain
+  
+  marker = [-118.289152, 34.019350];
+  
+  //🚧 use projection to project marker
+  var point = projection(marker);  //🚧  point=
+  
+  //🚧 use projection to project json.features[0].geometry
+  var coords = json.features[0].geometry.coordinates[0];  //🚧 explain
+  coords.forEach(d => {
+    var point = projection(d);
+    console.log(d, point);
+    //🚧  copy printed values here
+  });
+});</code></pre>
+	</div>
+
+	<h2>3 - drawing one feature</h2>
+	<hr>
+
+	<p>Complete the Answer where indicated by 🚧.</p>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+
+		<svg id="svg3" width="600" height="400" style="background-color: #eee"></svg>
+
+		<script type="text/javascript">
+			var d, data;
+			d3.json('data/us.json').then(json => {
+				data = json
+				console.log(json.features[4]);  // 🚧  explain
+
+				var svg = d3.select('#svg3'),
+					width = +svg.attr('width'),
+					height = +svg.attr('height');
+
+				projection = d3.geoAlbersUsa()
+					.fitSize([width, height], /* 🚧  complete to fit California */);
+
+				var path = d3.geoPath()
+					.projection(projection);
+
+				svg.append('path')
+					.attr('fill', 'rgb(255,190,232)')
+					.attr('stroke', 'black')
+					.attr('d', path(/* 🚧  complete to fit California */));  //🚧  explain
+			});
+		</script>
+
+		<pre><code class="js">var d, data;
+d3.json('data/us.json').then(json => {
+  data = json
+  console.log(json.features[4]);  // 🚧  explain
+
+  var svg = d3.select('#svg3'),
+    width = +svg.attr('width'),
+    height = +svg.attr('height');
+
+  projection = d3.geoAlbersUsa()
+    .fitSize([width, height], /* 🚧  complete to fit California */);
+
+  var path = d3.geoPath()
+    .projection(projection);
+
+  svg.append('path')
+    .attr('fill', 'rgb(255,190,232)')
+    .attr('stroke', 'black')
+    .attr('d', path(/* 🚧  complete to draw California */));  //🚧  explain
+});</code></pre>
+	</div>
+
+	<h2>4 - drawing a feature collection</h2>
+	<hr>
+
+	<p>Complete the Answer where indicated by 🚧.</p>
+
+	<div class="answer">
+		<div class="title">Answer</div>
+
+		<style>
+			.graticule {
+				fill: none;
+				stroke: grey;
+				stroke-width: .3px;
+				stroke-opacity: 0.5;
+			}
+
+			.states {
+				stroke: black;
+				stroke-width: .3px;
+			}
+		</style>
+
+		<svg id="svg4" width="600" height="400" style="background-color: #eee"></svg>
+
+		<script type="text/javascript">
+			d3.json('data/us.json').then(json => {  //🚧  explain
+
+				var svg = d3.select('#svg4'),
+					width = +svg.attr('width'),
+					height = +svg.attr('height');
+
+				var projection = d3.geoAlbersUsa()
+					.fitSize([width, height], json);
+
+				var path = d3.geoPath().projection(projection);  //🚧  explain
+
+				var graticule = d3.geoGraticule()  //🚧  explain
+					.step([10, 10]);
+
+				svg.append('path')
+					.datum(graticule)  //🚧  explain
+					.attr('class', 'graticule')
+					.attr('d', path);
+
+				svg.selectAll('.states')
+					.data(json.features)  //🚧  explain
+					.enter()
+					.append('path')
+					.attr('fill', d => 'white')  //🚧  explain
+					//.attr('fill', d => d.id == '06' ? '#FFCC00' : 'white')  //🚧  try and explain
+					.attr('class', 'states')
+					.attr('d', path);
+
+				var marker = projection([-118.289152, 34.019350]);
+				svg.append('circle')
+					.attr('cx', marker[0])
+					.attr('cy', marker[1])
+					.attr('r', 5);
+			});
+		</script>
+
+		<pre><code class="js">d3.json('data/us.json').then(json => {  //🚧  explain
+
+  var svg = d3.select('#svg4'),
+    width = +svg.attr('width'),
+    height = +svg.attr('height');
+
+  var projection = d3.geoAlbersUsa()
+    .fitSize([width, height], json);
+
+  var path = d3.geoPath().projection(projection);  //🚧  explain
+
+  var graticule = d3.geoGraticule()  //🚧  explain
+    .step([10, 10]);
+
+  svg.append('path')
+    .datum(graticule)  //🚧  explain
+    .attr('class', 'graticule')
+    .attr('d', path);
+
+  svg.append('path')
+    .attr('fill', 'rgb(255,190,232)')
+    .attr('stroke', 'black')
+    .attr('d', path(json.features[4]));  //generate geographic path
+
+  svg.selectAll('.states')
+    .data(json.features)  //🚧  explain
+    .enter()
+    .append('path')
+    .attr('fill', d => 'white')  //🚧  explain
+    //.attr('fill', d => d.id == '06' ? '#FFCC00' : 'white')  //🚧  try and explain
+    .attr('class', 'states')
+    .attr('d', path);
+
+  //🚧  explain
+  var marker = projection([-118.289152, 34.019350]);
+  svg.append('circle')
+    .attr('cx', marker[0])
+    .attr('cy', marker[1])
+    .attr('r', 5);
+});</code></pre>
+	</div>
+</body>
+
+</html>
